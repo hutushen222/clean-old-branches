@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../vendor/autoload.php';
+
+use MilkyThinking\CleanOldBranches\Commands\CleanCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->setName('Clean Old Branches');
+
+// Commands
+$application->add(new CleanCommand());
+
+$application->run();

@@ -1,0 +1,30 @@
+{
+    "name": "hutushen222/clean-old-branches",
+    "description": "Clean old branches.",
+    "type": "project",
+    "require": {
+        "symfony/console": "^3.2",
+        "cypresslab/gitelephant": "^1.1",
+        "symfony/var-dumper": "^3.2",
+        "nesbot/carbon": "^1.22"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MilkyThinking\\CleanOldBranches\\": "src/",
+            "MilkyThinking\\CleanOldBranches\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/clean-old-branches"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jack Hu",
+            "email": "hutushen222@gmail.com"
+        }
+    ]
+}
