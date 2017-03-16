@@ -14,6 +14,7 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
@@ -47,6 +48,11 @@ class CleanCommand extends Command
     private $days;
 
     /**
+     * @var bool
+     */
+    private $dryRun;
+
+    /**
      * @var array of reserved branches
      */
     private $reservedBranches = [
@@ -58,7 +64,8 @@ class CleanCommand extends Command
     {
         $this->setName('clean')
             ->setDescription('Clean old branches')
-            ->addArgument('repo', InputArgument::OPTIONAL, 'The repository path');
+            ->addArgument('repo', InputArgument::OPTIONAL, 'The repository path')
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -66,6 +73,8 @@ class CleanCommand extends Command
         if (!$input->getArgument('repo')) {
             $input->setArgument('repo', getcwd());
         }
+
+        $this->dryRun = $input->getOption('dry-run');
 
         try {
             $this->repo = Repository::open($input->getArgument('repo'));
@@ -209,10 +218,12 @@ class CleanCommand extends Command
         $lastCommitAt = Carbon::instance($lastCommit->getDatetimeAuthor());
 
         if ($this->isBeforeDays($lastCommitAt)) {
-            if ($this->isRemote()) {
-                $this->repo->push($this->remoteName, ':' . $branch);
-            } else {
-                $this->repo->deleteBranch($branch, true);
+            if (!$this->dryRun) {
+                if ($this->isRemote()) {
+                    $this->repo->push($this->remoteName, ':' . $branch);
+                } else {
+                    $this->repo->deleteBranch($branch, true);
+                }
             }
             $output->writeln(sprintf('  ==> "%s" is deleted (last commit at: "%s").',
                 $branchFull,
