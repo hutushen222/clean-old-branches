@@ -5,8 +5,6 @@ namespace MilkyThinking\CleanOldBranches\Commands;
 use Carbon\Carbon;
 use GitElephant\Exception\InvalidRepositoryPathException;
 use GitElephant\Objects\Branch;
-use GitElephant\Objects\Commit;
-use GitElephant\Objects\Log;
 use GitElephant\Objects\Remote;
 use GitElephant\Repository;
 use Symfony\Component\Console\Command\Command;
