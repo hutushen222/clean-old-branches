@@ -200,17 +200,17 @@ class CleanCommand extends Command
 
     private function deleteBranch(InputInterface $input, OutputInterface $output, $branch)
     {
+        $branchFull = $this->isRemote() ? $this->remoteName . '/' . $branch : $branch;
+
         if ($this->isReservedBranch($branch)) {
-            $output->writeln(sprintf('  ==> "%s" is reserved.', $branch));
+            $output->writeln(sprintf('  ==> "%s" is reserved.', $branchFull));
             return;
         }
 
         if ($this->repo->getMainBranch()->getName() == $branch) {
-            $output->writeln(sprintf('  ==> "%s" is skipped (current branch).', $branch));
+            $output->writeln(sprintf('  ==> "%s" is skipped (current branch).', $branchFull));
             return;
         }
-
-        $branchFull = $this->isRemote() ? $this->remoteName . '/' . $branch : $branch;
 
         $lastCommit = $this->getLastCommit($branchFull);
         $lastCommitAt = Carbon::instance($lastCommit->getDatetimeAuthor());
